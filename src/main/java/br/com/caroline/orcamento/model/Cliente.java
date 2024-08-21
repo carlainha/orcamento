@@ -1,5 +1,6 @@
 package br.com.caroline.orcamento.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -23,8 +24,17 @@ public class Cliente {
     @JoinColumn(name = "id_municipio")
     private Municipio municipio;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "cliente")
     private List<Lancamento> lancamentoLista = new ArrayList<>();
+
+    public List<Lancamento> getLancamentoLista() {
+        return lancamentoLista;
+    }
+
+    public void setLancamentoLista(List<Lancamento> lancamentoLista) {
+        this.lancamentoLista = lancamentoLista;
+    }
 
     public Long getId() {
         return id;

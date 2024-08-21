@@ -1,5 +1,6 @@
 package br.com.caroline.orcamento.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -17,8 +18,17 @@ public class Municipio {
 
     private String estado;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "municipio")
     private List<Cliente> clienteLista = new ArrayList<>();
+
+    public List<Cliente> getClienteLista() {
+        return clienteLista;
+    }
+
+    public void setClienteLista(List<Cliente> clienteLista) {
+        this.clienteLista = clienteLista;
+    }
 
     public int getId() {
         return id;
