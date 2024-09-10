@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/lancamentos")
@@ -20,14 +21,26 @@ public class LancamentoController {
     @Autowired
     private LancamentoRepository lancamentoRepository;
 
-    @GetMapping
+    @GetMapping()
     public List<Lancamento> ListarTodosLancamentos(){
         return lancamentoRepository.findAll(Sort.by("tipolancamento").ascending());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Lancamento> buscarPeloId(@PathVariable Long id){
+        Optional<Lancamento> lancamento = lancamentoRepository.findById(id);
+        return lancamento.isPresent() ? ResponseEntity.ok(lancamento.get()) : ResponseEntity.notFound().build();
     }
 
     @PostMapping()
     public ResponseEntity<Lancamento> inserir (@RequestBody Lancamento lancamento){
         Lancamento lancamentoSalva = lancamentoService.salvar(lancamento);
         return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoSalva);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long id){
+        lancamentoRepository.deleteById(id);
     }
 }

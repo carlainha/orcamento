@@ -10,10 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/clientes")
-public class ClienteContrtoller {
+public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
@@ -25,9 +26,21 @@ public class ClienteContrtoller {
         return clienteRepository.findAll(Sort.by("nome").ascending());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Cliente> buscarPeloId(@PathVariable Long id){
+        Optional<Cliente> cliente=clienteRepository.findById(id);
+        return cliente.isPresent()? ResponseEntity.ok(cliente.get()): ResponseEntity.notFound().build();
+    }
+
     @PostMapping()
     public ResponseEntity<Cliente> inserir (@RequestBody Cliente cliente){
         Cliente clienteSalva = clienteService.salvar(cliente);
         return ResponseEntity.status(HttpStatus.CREATED).body(clienteSalva);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long id){
+        clienteRepository.deleteById(id);
     }
 }
