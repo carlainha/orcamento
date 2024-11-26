@@ -21,7 +21,7 @@ public class ClienteController {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    @GetMapping
+    @GetMapping()
     public List<Cliente> ListarTodosClientes(){
         return clienteRepository.findAll(Sort.by("nome").ascending());
     }
